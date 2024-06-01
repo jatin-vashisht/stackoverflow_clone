@@ -22,7 +22,7 @@ interface Props {
 const Answer = ({ question, questionId, authorId }: Props) => {
   const pathname = usePathname();
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const { mode } = useTheme();
+  const { theme } = useTheme();
   const editorRef = useRef(null)
   const form = useForm<z.infer<typeof AnswerSchema>>({
     resolver: zodResolver(AnswerSchema),
@@ -57,7 +57,7 @@ const Answer = ({ question, questionId, authorId }: Props) => {
   }
 
   return (
-    <div>
+    <div className='mt-8'>
       <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
         <h4 className="paragraph-semibold text-dark400_light800">Write your answer here</h4>
 
@@ -107,8 +107,8 @@ const Answer = ({ question, questionId, authorId }: Props) => {
                     'codesample | bold italic forecolor | alignleft aligncenter |' +
                     'alignright alignjustify | bullist numlist',
                     content_style: 'body { font-family:Inter; font-size:16px }',
-                    skin: mode === 'dark' ? 'oxide-dark' : 'oxide',
-                    content_css: mode === 'dark' ? 'dark' : 'light', 
+                    skin: theme === 'dark' ? 'oxide-dark' : 'oxide',
+                    content_css: theme === 'dark' ? 'dark' : 'light', 
                   }}
                 />
                 </FormControl>
