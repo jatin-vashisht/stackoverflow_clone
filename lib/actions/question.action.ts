@@ -1,13 +1,13 @@
 "use server"
 
-import { connectToDatabase } from "../mongoose"
-import { CreateQuestionParams, DeleteQuestionParams, EditQuestionParams, GetQuestionByIdParams, GetQuestionsParams, QuestionVoteParams } from "./shared.types";
-import { revalidatePath } from "next/cache";
 import Answer from "../models/answer.model";
 import Interaction from "../models/interaction.model";
 import Question from "../models/question.model";
 import Tag from "../models/tag.model";
 import User from "../models/user.model";
+import { connectToDatabase } from "../mongoose"
+import { CreateQuestionParams, DeleteQuestionParams, EditQuestionParams, GetQuestionByIdParams, GetQuestionsParams, QuestionVoteParams } from "./shared.types";
+import { revalidatePath } from "next/cache";
 
 export async function getQuestions(params: GetQuestionsParams) {
   try {
@@ -187,5 +187,20 @@ export async function editQuestion(params: EditQuestionParams) {
     revalidatePath(path);
   } catch (error) {
     console.log(error);
+  }
+}
+
+export async function getHotQuestions() {
+  try {
+    connectToDatabase();
+
+    const hotQuestions = await Question.find({})
+      .sort({ views: -1, upvotes: -1 }) 
+      .limit(5);
+
+      return hotQuestions;
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
 }
