@@ -31,9 +31,45 @@ export async function getAllTags(params: GetAllTagsParams) {
   try {
     connectToDatabase();
 
-    const tags = await Tag.find({});
+    const { searchQuery, filter, page = 1, pageSize = 10 } = params;
+    const skipAmount = (page - 1) * pageSize;
 
-    return { tags }
+    const query: FilterQuery<typeof Tag> = {};
+
+    if(searchQuery) {
+      query.$or = [{name: { $regex: new RegExp(searchQuery, 'i')}}]
+    }
+
+    let sortOptions = {};
+
+    switch (filter) {
+      case "popular":
+        sortOptions = { questions: -1 }
+        break;
+      case "recent":
+        sortOptions = { createdAt: -1 }
+        break;
+      case "name":
+        sortOptions = { name: 1 }
+        break;
+      case "old":
+        sortOptions = { createdAt: 1 }
+        break;
+    
+      default:
+        break;
+    }
+
+    const totalTags = await Tag.countDocuments(query);
+
+    const tags = await Tag.find(query)
+      .sort(sortOptions)
+      .skip(skipAmount)
+      .limit(pageSize);
+
+      const isNext = totalTags > skipAmount + tags.length;
+
+    return { tags, isNext }
   } catch (error) {
     console.log(error);
     throw error;
@@ -45,6 +81,7 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
     connectToDatabase();
 
     const { tagId, page = 1, pageSize = 10, searchQuery } = params;
+    const skipAmount = (page - 1) * pageSize;
 
     const tagFilter: FilterQuery<ITag> = { _id: tagId};
 
@@ -56,6 +93,8 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
         : {},
       options: {
         sort: { createdAt: -1 },
+        skip: skipAmount,
+        limit: pageSize + 1 // +1 to check if there is next page
       },
       populate: [
         { path: 'tags', model: Tag, select: "_id name" },
@@ -67,11 +106,11 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
       throw new Error('Tag not found');
     }
 
-    console.log(tag)
+    const isNext = tag.questions.length > pageSize;
     
     const questions = tag.questions;
 
-    return { tagTitle: tag.name, questions };
+    return { tagTitle: tag.name, questions, isNext };
 
   } catch (error) {
     console.log(error);

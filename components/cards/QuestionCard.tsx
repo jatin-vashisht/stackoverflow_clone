@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import React from 'react'
 import RenderTag from '../shared/RenderTag';
 import Metric from '../shared/Metric';
 import { formatAndDivideNumber, getTimestamp } from '@/lib/utils';
@@ -17,7 +16,6 @@ interface QuestionProps {
     _id: string;
     name: string;
     picture: string;
-    clerkId: string;
   };
   upvotes: string[];
   views: number;
@@ -40,7 +38,7 @@ const QuestionCard = ({
   const showActionButtons = clerkId && clerkId === author.clerkId;
 
   return (
-    <div className="card-wrapper rounded-[10px] p-9 sm:px-11">
+    <div className="card-wrapper rounded-[10px] py-9 sm:px-11 mb-6">
       <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
         <div>
           <span className="subtle-regular text-dark400_light700 line-clamp-1 flex sm:hidden">
