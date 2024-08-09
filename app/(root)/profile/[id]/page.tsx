@@ -12,7 +12,12 @@ import ProfileLink from '@/components/shared/ProfileLink'
 import Stats from '@/components/shared/Stats'
 import QuestionTab from '@/components/shared/QuestionTab'
 import AnswersTab from '@/components/shared/AnswersTab'
+import { Metadata } from 'next'
 import { auth } from '@clerk/nextjs/server'
+
+export const metadata:Metadata = {
+  title: 'Profile | Stack Overflow'
+}
 
 const Page = async ({ params, searchParams}: URLProps) => {
   const { userId: clerkId } = auth();
@@ -90,7 +95,7 @@ const Page = async ({ params, searchParams}: URLProps) => {
             <TabsTrigger value="top-posts" className="tab">Top Posts</TabsTrigger>
             <TabsTrigger value="answers" className="tab">Answers</TabsTrigger>
           </TabsList>
-          <TabsContent value="top-posts">
+          <TabsContent value="top-posts" className="mt-5 flex w-full flex-col gap-6">
             <QuestionTab 
               searchParams={searchParams}
               userId={userInfo.user._id}

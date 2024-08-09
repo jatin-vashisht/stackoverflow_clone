@@ -3,6 +3,12 @@ import { getUserById } from '@/lib/actions/user.action';
 import { ParamsProps } from '@/types';
 import { auth } from '@clerk/nextjs/server';
 
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Profile | Stack Overflow',
+}
+
 const Page = async ({ params }: ParamsProps) => {
   const { userId } = auth();
 
