@@ -35,6 +35,13 @@ const Votes = ({
   const router = useRouter();
 
   const handleSave = async () => {
+    if(!userId) {
+      return toast({
+        title: 'Please log in',
+        description: 'Create an account or log in to save this question',
+      })
+    }
+
     await toggleSaveQuestion({
       userId: JSON.parse(userId),
       questionId: JSON.parse(itemId),

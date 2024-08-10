@@ -9,6 +9,7 @@ import { SearchParamsProps } from "@/types";
 import { auth } from "@clerk/nextjs/server";
 
 import type { Metadata } from 'next';
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: 'Collections | Stack Overflow',
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
 export default async function Home({ searchParams }: SearchParamsProps) {
   const { userId } = auth();
 
-  if(!userId) return null;
+  if (!userId) redirect('/sign-in');
 
   const result = await getSavedQuestions({
     clerkId: userId,

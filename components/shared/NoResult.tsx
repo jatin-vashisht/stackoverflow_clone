@@ -5,7 +5,7 @@ import { Button } from '../ui/button'
 
 interface Props {
   title: string
-  description: string
+  description?: string
   link: string
   linkTitle: string
 }
